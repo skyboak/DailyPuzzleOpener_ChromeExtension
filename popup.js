@@ -1,37 +1,38 @@
-const puzzleListElement = document.getElementById("puzzleList");
+document.addEventListener('DOMContentLoaded', function() {
 
-// Display existing puzzles
-chrome.storage.local.get("puzzleUrls", (data) => {
-  const puzzleUrls = data.puzzleUrls || [];
-  puzzleUrls.forEach((url) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = url;
-    puzzleListElement.appendChild(listItem);
-  });
-});
+  // Get references to button elements
+  const predefinedButtons = document.querySelectorAll('#predefined-puzzles li button');
+  const userPuzzleList = document.querySelector('#user-puzzles ul');
 
-function addPuzzle() {
-  // Prompt user for URL and store it in Chrome storage
-  const newUrl = prompt("Enter the URL of the new puzzle:");
-  if (newUrl) {
-    chrome.storage.local.get("puzzleUrls", (data) => {
-      const puzzleUrls = data.puzzleUrls || [];
-      puzzleUrls.push(newUrl);
-      chrome.storage.local.set({ puzzleUrls });
-      // Update the list dynamically
-      const listItem = document.createElement("li");
-      listItem.textContent = newUrl;
-      puzzleListElement.appendChild(listItem);
-    });
+  // Function to open a new tab with the given URL
+  function openPuzzleTab(url) {
+    chrome.tabs.create({ url: url });
   }
-}
 
-function openAllPuzzles() {
-  // Access stored URLs and open them in new tabs
-  chrome.storage.local.get("puzzleUrls", (data) => {
-    const puzzleUrls = data.puzzleUrls || [];
-    puzzleUrls.forEach((url) => {
-      chrome.tabs.create({ url });
+  // Add click event listeners to predefined buttons
+  predefinedButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const puzzleUrl = button.dataset.url;
+      openPuzzleTab(puzzleUrl);
     });
   });
-}
+
+  // Fetch user-defined URLs from storage and populate the list
+  chrome.storage.sync.get('userPuzzles', data => {
+    if (data && data.userPuzzles) {
+      const userPuzzles = data.userPuzzles;
+      userPuzzles.forEach(puzzle => {
+        const listItem = document.createElement('li');
+        const userButton = document.createElement('button');
+        userButton.textContent = puzzle.name;
+        userButton.dataset.url = puzzle.url;
+        userButton.addEventListener('click', () => {
+          openPuzzleTab(puzzle.url);
+        });
+        listItem.appendChild(userButton);
+        userPuzzleList.appendChild(listItem);
+      });
+    }
+  });
+
+});

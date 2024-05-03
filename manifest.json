@@ -1,17 +1,17 @@
 {
-    "manifest_version": 3,
-    "name": "Daily Puzzles",
-    "version": "1.0",
-    "description": "Open daily puzzles like Wordle and NYT Connections",
-    "permissions": [
-      "storage",
-      "activeTab"
-    ],
-    "background": {
-      "scripts": ["background.js"]
-    },
-    "browser_action": {
-      "default_popup": "popup.html"
-    }
-  }
-  
+  "manifest_version": 3,
+  "name": "My Daily Puzzle Opener",
+  "version": "1.0",
+  "description": "Opens your favorite daily puzzles with a click or on a new day",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html"
+}
