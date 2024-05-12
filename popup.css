@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f4f4f4;
+    width: 200px;
+    height: 300px;
+}
+
+h2, h3 {
+    color: #333;
+}
+
+button {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#puzzles {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#puzzles ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#puzzles ul li {
+    margin-bottom: 10px;
+    font-size: 18px; /* Increase the text size */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    overflow: hidden; /* Hide text that overflows the container */
+    text-overflow: ellipsis; /* Add an ellipsis (...) when the text overflows */
+  }

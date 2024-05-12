@@ -1,38 +1,51 @@
-document.addEventListener('DOMContentLoaded', function() {
+// Get references to DOM elements
+const puzzlesList = document.getElementById('puzzles');
+const openNowButton = document.querySelector('button');
+const optionsButton = document.getElementById('optionsButton');
 
-  // Get references to button elements
-  const predefinedButtons = document.querySelectorAll('#predefined-puzzles li button');
-  const userPuzzleList = document.querySelector('#user-puzzles ul');
+// Load user puzzles from chrome.storage.local
+chrome.storage.local.get('userPuzzles', (data) => {
+  userPuzzles = Array.isArray(data.userPuzzles) ? data.userPuzzles : [];
 
-  // Function to open a new tab with the given URL
-  function openPuzzleTab(url) {
-    chrome.tabs.create({ url: url });
+  // Add puzzles to the DOM
+  userPuzzles.forEach(addPuzzleToDOM);
+});
+
+// Function to add a puzzle to the DOM
+function addPuzzleToDOM(puzzle) {
+  // Only add the puzzle if it's enabled
+  if (puzzle.enabled) {
+    // Create a new list item
+    const li = document.createElement('li');
+
+    // Create a new text node for the puzzle name
+    const text = document.createTextNode(puzzle.name);
+
+    // Add the text to the list item
+    li.appendChild(text);
+
+    // Add the list item to the puzzles list
+    puzzlesList.appendChild(li);
   }
+}
 
-  // Add click event listeners to predefined buttons
-  predefinedButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const puzzleUrl = button.dataset.url;
-      openPuzzleTab(puzzleUrl);
+openNowButton.addEventListener('click', () => {
+  chrome.storage.local.get('userPuzzles', (data) => {
+    userPuzzles = Array.isArray(data.userPuzzles) ? data.userPuzzles : [];
+
+    // Open each enabled puzzle in a new tab
+    userPuzzles.forEach(puzzle => {
+      if (puzzle.enabled) {
+        chrome.tabs.create({ url: puzzle.url });
+      }
     });
-  });
 
-  // Fetch user-defined URLs from storage and populate the list
-  chrome.storage.sync.get('userPuzzles', data => {
-    if (data && data.userPuzzles) {
-      const userPuzzles = data.userPuzzles;
-      userPuzzles.forEach(puzzle => {
-        const listItem = document.createElement('li');
-        const userButton = document.createElement('button');
-        userButton.textContent = puzzle.name;
-        userButton.dataset.url = puzzle.url;
-        userButton.addEventListener('click', () => {
-          openPuzzleTab(puzzle.url);
-        });
-        listItem.appendChild(userButton);
-        userPuzzleList.appendChild(listItem);
-      });
-    }
+    const today = new Date().toLocaleDateString();
+    chrome.storage.local.set({ 'lastCheck': today });
   });
+});
 
+// Add event listener to the options button
+optionsButton.addEventListener('click', () => {
+  chrome.runtime.openOptionsPage();
 });
