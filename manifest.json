@@ -4,7 +4,6 @@
   "version": "1.0",
   "description": "Opens your favorite daily puzzles with a click or on a new day",
   "permissions": [
-    "activeTab",
     "storage"
   ],
   "background": {
