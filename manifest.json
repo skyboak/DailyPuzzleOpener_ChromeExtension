@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "My Daily Puzzle Opener",
   "version": "1.0",
-  "description": "Opens your favorite daily puzzles with a click or on a new day",
+  "description": "Opens Your Favorite Daily Puzzles With A Click Or On A New Day.",
   "permissions": [
     "storage"
   ],
